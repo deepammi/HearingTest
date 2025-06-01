@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "718472840296",
+    "firebase_url": "https://i-can-hear-e54e2.firebaseio.com",
+    "project_id": "i-can-hear-e54e2",
+    "storage_bucket": "i-can-hear-e54e2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:718472840296:android:3e455d9b168d71f9fc27dd",
+        "android_client_info": {
+          "package_name": "com.icanhear.icanhear"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "718472840296-jc2vu0tbqgif7ir55nrg53gdi1rng0v3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.icanhear.icanhear",
+            "certificate_hash": "23b6747f632f5c458dc77a2b79494cb21c689729"
+          }
+        },
+        {
+          "client_id": "718472840296-l76acikn33lsuj70pspp0koga9al396o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFX338gBVah1rAXE2v3kIy76-F5YXj5CE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "718472840296-l76acikn33lsuj70pspp0koga9al396o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

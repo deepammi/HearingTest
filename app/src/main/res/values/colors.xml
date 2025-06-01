@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#2B7EF1</color>
+    <color name="colorPrimaryDark">#1F6CD8</color>
+    <color name="colorAccent">#FB8C00</color>
+    <color name="white">#FFFFFF</color>
+    <color name="pulse_color">#FFFFFF</color>
+
+    <color name="primary_text_color">#DF000000</color>
+    <color name="subtitle_color">#DFFFFFFF</color>
+
+    <color name="left_ear_color">#433AC4</color>
+    <color name="right_ear_color">#F01244</color>
+
+    <color name="input_background">#F5F5F5</color>
+    <color name="headline_text_color">#202020</color>
+</resources>
