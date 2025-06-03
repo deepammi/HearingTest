@@ -1,26 +1,20 @@
-package com.icanhear.icanhear.fragments
+package com.icanhear.hearingtest.fragments
 
 import android.os.Bundle
-import android.text.BoringLayout
 import android.text.InputType
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.android.billingclient.api.*
 import com.google.android.material.snackbar.Snackbar
-import com.icanhear.icanhear.R
-import com.icanhear.icanhear.models.UserInfo
-import com.icanhear.icanhear.databinding.FragmentUserInfoBinding
-import com.icanhear.icanhear.inapp.InAppBilling
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.icanhear.hearingtest.R
+import com.icanhear.hearingtest.models.UserInfo
+import com.icanhear.hearingtest.databinding.FragmentUserInfoBinding
+import com.icanhear.hearingtest.inapp.InAppBilling
+
 //import kotlinx.android.synthetic.main.fragment_user_info.view.*
 
 class UserInfoFragment : Fragment() {

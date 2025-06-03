@@ -1,7 +1,7 @@
-package com.icanhear.icanhear.models
+package com.icanhear.hearingtest.models
 
 import android.preference.PreferenceManager
-import com.icanhear.icanhear.ICanHearApplication
+import com.icanhear.hearingtest.ICanHearApplication
 
 class UserInfo {
 

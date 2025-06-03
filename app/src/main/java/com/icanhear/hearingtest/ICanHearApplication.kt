@@ -1,4 +1,4 @@
-package com.icanhear.icanhear
+package com.icanhear.hearingtest
 
 import android.app.Application
 

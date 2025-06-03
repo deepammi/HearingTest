@@ -6,7 +6,7 @@ plugins {
 }
 android {
     compileSdkVersion 35
-    namespace "com.icanhear.icanhear"
+    namespace "com.icanhear.hearingtest"
     defaultConfig {
         applicationId "com.icanhear.icanhear"
         minSdkVersion 24

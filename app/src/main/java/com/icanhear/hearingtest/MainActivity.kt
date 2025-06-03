@@ -1,4 +1,4 @@
-package com.icanhear.icanhear
+package com.icanhear.hearingtest
 
 import android.content.Context
 import android.media.AudioManager
@@ -9,7 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.google.firebase.FirebaseApp
-import com.icanhear.icanhear.databinding.ActivityMainBinding
+import com.icanhear.hearingtest.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {

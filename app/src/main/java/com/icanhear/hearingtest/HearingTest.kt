@@ -1,15 +1,11 @@
-package com.icanhear.icanhear
+package com.icanhear.hearingtest
 
 import android.content.Context
 import android.os.Environment
 import android.text.TextUtils
-import android.widget.Toast
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import com.icanhear.icanhear.models.State
-import com.icanhear.icanhear.models.UserInfo
+import com.icanhear.hearingtest.models.State
+import com.icanhear.hearingtest.models.UserInfo
 import java.io.File
-import java.io.FileInputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
