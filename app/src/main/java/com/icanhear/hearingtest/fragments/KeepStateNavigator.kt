@@ -1,4 +1,4 @@
-package com.icanhear.hearingtest.fragments
+package com.hearingtest.hearingtest.fragments
 
 import android.content.Context
 import android.os.Bundle

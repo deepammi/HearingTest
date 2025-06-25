@@ -1,4 +1,4 @@
-package com.icanhear.hearingtest.inapp
+package com.hearingtest.hearingtest.inapp
 
 import android.app.Activity
 import android.content.Context

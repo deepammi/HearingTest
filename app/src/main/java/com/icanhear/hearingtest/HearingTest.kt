@@ -1,10 +1,10 @@
-package com.icanhear.hearingtest
+package com.hearingtest.hearingtest
 
 import android.content.Context
 import android.os.Environment
 import android.text.TextUtils
-import com.icanhear.hearingtest.models.State
-import com.icanhear.hearingtest.models.UserInfo
+import com.hearingtest.hearingtest.models.State
+import com.hearingtest.hearingtest.models.UserInfo
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*

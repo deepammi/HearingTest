@@ -1,9 +1,9 @@
-package com.icanhear.hearingtest
+package com.hearingtest.hearingtest
 
 import android.app.Application
 
 
-//import com.icanhear.icanhear.paypalconfig.Config.Companion.config
+//import com.hearingtest.hearingtest.paypalconfig.Config.Companion.config
 //import com.paypal.android.sdk.payments.PayPalConfiguration
 //import com.paypal.android.sdk.payments.PayPalService
 

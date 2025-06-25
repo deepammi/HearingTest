@@ -1,4 +1,4 @@
-package com.icanhear.hearingtest
+package com.hearingtest.hearingtest
 
 import android.media.AudioFormat.CHANNEL_OUT_STEREO
 import android.media.AudioFormat.ENCODING_PCM_16BIT

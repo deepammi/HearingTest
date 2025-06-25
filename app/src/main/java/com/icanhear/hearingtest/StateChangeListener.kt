@@ -1,6 +1,6 @@
-package com.icanhear.hearingtest
+package com.hearingtest.hearingtest
 
-import com.icanhear.hearingtest.models.State
+import com.hearingtest.hearingtest.models.State
 
 interface StateChangeListener
 {

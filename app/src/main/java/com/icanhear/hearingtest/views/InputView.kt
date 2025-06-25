@@ -1,11 +1,11 @@
-package com.icanhear.hearingtest.views
+package com.hearingtest.hearingtest.views
 
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
-import com.icanhear.hearingtest.R
+import com.hearingtest.hearingtest.R
 
 
 class InputView : LinearLayout {

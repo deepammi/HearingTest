@@ -1,4 +1,4 @@
-package com.icanhear.hearingtest.fragments
+package com.hearingtest.hearingtest.fragments
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -11,8 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import com.icanhear.hearingtest.R
-import com.icanhear.hearingtest.databinding.FragmentWelcomeBinding
+import com.hearingtest.hearingtest.R
+import com.hearingtest.hearingtest.databinding.FragmentWelcomeBinding
 
 class WelcomeFragment: Fragment() {
 

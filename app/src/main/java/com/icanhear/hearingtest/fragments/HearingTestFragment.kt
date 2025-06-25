@@ -1,4 +1,4 @@
-package com.icanhear.hearingtest.fragments
+package com.hearingtest.hearingtest.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -26,11 +26,11 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import com.icanhear.hearingtest.*
-import com.icanhear.hearingtest.databinding.FragmentHearingTestBinding
-import com.icanhear.hearingtest.inapp.InAppBilling
-import com.icanhear.hearingtest.models.State
-import com.icanhear.hearingtest.models.UserInfo
+import com.hearingtest.hearingtest.*
+import com.hearingtest.hearingtest.databinding.FragmentHearingTestBinding
+import com.hearingtest.hearingtest.inapp.InAppBilling
+import com.hearingtest.hearingtest.models.State
+import com.hearingtest.hearingtest.models.UserInfo
 //
 //import kotlinx.android.synthetic.main.fragment_user_info.*
 import java.io.File

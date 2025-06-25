@@ -1,4 +1,4 @@
-package com.icanhear.hearingtest.fragments
+package com.hearingtest.hearingtest.fragments
 
 import android.os.Bundle
 import android.text.InputType
@@ -10,10 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.android.billingclient.api.*
 import com.google.android.material.snackbar.Snackbar
-import com.icanhear.hearingtest.R
-import com.icanhear.hearingtest.models.UserInfo
-import com.icanhear.hearingtest.databinding.FragmentUserInfoBinding
-import com.icanhear.hearingtest.inapp.InAppBilling
+import com.hearingtest.hearingtest.R
+import com.hearingtest.hearingtest.models.UserInfo
+import com.hearingtest.hearingtest.databinding.FragmentUserInfoBinding
+import com.hearingtest.hearingtest.inapp.InAppBilling
 
 //import kotlinx.android.synthetic.main.fragment_user_info.view.*
 
