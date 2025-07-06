@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/welcomeFragment"
-        android:name="com.icanhear.icanhear.fragments.WelcomeFragment"
+        android:name="com.hearingtest.hearingtest.fragments.WelcomeFragment"
         android:label="WelcomeFragment" >
         <action
             android:id="@+id/action_welcomeFragment_to_userInfoFragment"
@@ -17,11 +17,11 @@
     </fragment>
     <fragment
         android:id="@+id/hearingTestFragment"
-        android:name="com.icanhear.icanhear.fragments.HearingTestFragment"
+        android:name="com.hearingtest.hearingtest.fragments.HearingTestFragment"
         android:label="HearingTestFragment" />
     <fragment
         android:id="@+id/userInfoFragment"
-        android:name="com.icanhear.icanhear.fragments.UserInfoFragment"
+        android:name="com.hearingtest.hearingtest.fragments.UserInfoFragment"
         android:label="UserInfoFragment" >
         <action
             android:id="@+id/action_userInfoFragment_to_hearingTestFragment"

@@ -44,7 +44,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title">
 
-                <com.icanhear.icanhear.views.InputView
+                <com.hearingtest.hearingtest.views.InputView
                     android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -53,7 +53,7 @@
                     android:layout_width="0dp"
                     android:layout_height="16dp" />
 
-                <com.icanhear.icanhear.views.InputView
+                <com.hearingtest.hearingtest.views.InputView
                     android:id="@+id/location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -62,7 +62,7 @@
                     android:layout_width="0dp"
                     android:layout_height="16dp" />
 
-                <com.icanhear.icanhear.views.InputView
+                <com.hearingtest.hearingtest.views.InputView
                     android:id="@+id/age"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -71,7 +71,7 @@
                     android:layout_width="0dp"
                     android:layout_height="16dp" />
 
-                <com.icanhear.icanhear.views.InputView
+                <com.hearingtest.hearingtest.views.InputView
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -80,7 +80,7 @@
                     android:layout_width="0dp"
                     android:layout_height="16dp" />
 
-                <com.icanhear.icanhear.views.InputView
+                <com.hearingtest.hearingtest.views.InputView
                     android:id="@+id/phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -89,7 +89,7 @@
                     android:layout_width="0dp"
                     android:layout_height="16dp" />
 
-                <com.icanhear.icanhear.views.InputView
+                <com.hearingtest.hearingtest.views.InputView
                     android:id="@+id/history"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -98,7 +98,7 @@
                     android:layout_width="0dp"
                     android:layout_height="16dp" />
 
-                <com.icanhear.icanhear.views.InputView
+                <com.hearingtest.hearingtest.views.InputView
                     android:id="@+id/gainFactor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

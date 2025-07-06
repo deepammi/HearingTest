@@ -1,11 +1,8 @@
-package com.icanhear.icanhear.fragments
+package com.hearingtest.hearingtest.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.media.AudioTrack
@@ -16,7 +13,6 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -30,17 +26,15 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import com.icanhear.icanhear.*
-import com.icanhear.icanhear.databinding.FragmentHearingTestBinding
-import com.icanhear.icanhear.inapp.InAppBilling
-import com.icanhear.icanhear.models.State
-import com.icanhear.icanhear.models.UserInfo
+import com.hearingtest.hearingtest.*
+import com.hearingtest.hearingtest.databinding.FragmentHearingTestBinding
+import com.hearingtest.hearingtest.inapp.InAppBilling
+import com.hearingtest.hearingtest.models.State
+import com.hearingtest.hearingtest.models.UserInfo
 //
 //import kotlinx.android.synthetic.main.fragment_user_info.*
-import org.json.JSONException
 import java.io.File
 import java.io.FileInputStream
-import java.math.BigDecimal
 import java.util.*
 
 class HearingTestFragment : Fragment(), StateChangeListener {

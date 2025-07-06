@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:718472840296:android:3e455d9b168d71f9fc27dd",
         "android_client_info": {
-          "package_name": "com.icanhear.icanhear"
+          "package_name": "com.hearingtest.hearingtest"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "718472840296-jc2vu0tbqgif7ir55nrg53gdi1rng0v3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.icanhear.icanhear",
+            "package_name": "com.hearingtest.hearingtest",
             "certificate_hash": "23b6747f632f5c458dc77a2b79494cb21c689729"
           }
         },

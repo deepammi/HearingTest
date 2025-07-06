@@ -1,6 +1,6 @@
-package com.icanhear.icanhear.models
+package com.hearingtest.hearingtest.models
 
-import com.icanhear.icanhear.SoundGenerator
+import com.hearingtest.hearingtest.SoundGenerator
 
 class State(
     val frequency: Float,
