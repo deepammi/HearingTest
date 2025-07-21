@@ -83,6 +83,10 @@ class UserInfoFragment : Fragment() {
                 showMessage(view, "Age is mandatory")
                 return
             }
+            if (TextUtils.isEmpty(phone.contentEditText?.text)) {
+                showMessage(view, "Phone is mandatory")
+                return
+            }
 
             val userInfo = UserInfo.instance
             userInfo.name = name.contentEditText?.text.toString()

@@ -1,18 +1,26 @@
 package com.hearingtest.hearingtest.fragments
 
+//
+//import kotlinx.android.synthetic.main.fragment_user_info.*
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.media.AudioTrack
+import android.net.Uri
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.Settings
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -24,20 +32,19 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IFillFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.FirebaseStorage
 import com.hearingtest.hearingtest.*
 import com.hearingtest.hearingtest.databinding.FragmentHearingTestBinding
 import com.hearingtest.hearingtest.inapp.InAppBilling
 import com.hearingtest.hearingtest.models.State
 import com.hearingtest.hearingtest.models.UserInfo
-//
-//import kotlinx.android.synthetic.main.fragment_user_info.*
+import com.icanhear.hearingtest.FirebaseCallback
+import com.icanhear.hearingtest.NetworkUtils.isNetworkAvailable
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
 
-class HearingTestFragment : Fragment(), StateChangeListener {
+class HearingTestFragment : Fragment(), StateChangeListener, FirebaseCallback {
 
 
     // Change grap and updated dependency to configure latest android version update
@@ -53,6 +60,9 @@ class HearingTestFragment : Fragment(), StateChangeListener {
     private var timer = Timer()
 
     private var inAppBilling: InAppBilling? = null
+    private var isResultSaved = false
+    private var isPendingSaveAfterPermission = false
+
 
     private var timerTask = object : TimerTask() {
         override fun run() {
@@ -62,6 +72,7 @@ class HearingTestFragment : Fragment(), StateChangeListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         activity?.let {
             soundGenerator = SoundGenerator()
             soundGenerator?.let {
@@ -74,7 +85,7 @@ class HearingTestFragment : Fragment(), StateChangeListener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHearingTestBinding.inflate(inflater, container, false)
 
         with(binding) {
@@ -91,6 +102,46 @@ class HearingTestFragment : Fragment(), StateChangeListener {
 
         return binding.root
     }
+    override fun onResume() {
+        super.onResume()
+        val context = context ?: return
+
+        val isManagerPermissionGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Environment.isExternalStorageManager()
+        } else {
+            ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        }
+
+        if (isManagerPermissionGranted && isPendingSaveAfterPermission && !isResultSaved) {
+            save(binding.save)
+            isPendingSaveAfterPermission = false
+        }
+    }
+
+
+    @Deprecated("Deprecated in Java")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == STORAGE_PERMISSION_REQUEST) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (isPendingSaveAfterPermission && !isResultSaved) {
+                    save(binding.save)
+                    isPendingSaveAfterPermission = false
+                }
+            } else {
+                Snackbar.make(
+                    binding.save,
+                    "Permission has not been granted",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+                Log.d(TAG, "Permission has not been granted")
+            }
+        }
+    }
+
 
     override fun onDestroyView() {
         stop()
@@ -256,44 +307,52 @@ class HearingTestFragment : Fragment(), StateChangeListener {
 
     }
 
+
+
     private fun save(view: View) {
+        binding.progressBarSaving.visibility = View.VISIBLE
+        binding.supportUs.isEnabled = false
+        if (isResultSaved) {
+            Snackbar.make(view, "This result has already been saved.", Snackbar.LENGTH_SHORT).show()
+            return
+        }
+
         context?.let { context ->
-
-            val permission = ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.MANAGE_EXTERNAL_STORAGE
-            )
-
-            if (permission != PackageManager.PERMISSION_GRANTED) {
-                makeRequest()
-            } else {
-                val fileName = hearingTest?.saveResult(context)
-
-
-                val storage = Firebase.storage
-
-                val storageRef = storage.reference
-                val mountainImagesRef = storageRef.child("$fileName")
-                val pathToExternalStorage = Environment.getExternalStorageDirectory()
-
-                val stream =
-                    FileInputStream(File(pathToExternalStorage.absolutePath + "/documents/HearingTest/$fileName"))
-
-                val uploadTask = mountainImagesRef.putStream(stream)
-                uploadTask.addOnFailureListener {
-                    // Handle unsuccessful uploads
-                    Snackbar.make(view, "fail $fileName", Snackbar.LENGTH_SHORT).show()
-
-                }.addOnSuccessListener {
-                    // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-                    Snackbar.make(view, "Success $fileName", Snackbar.LENGTH_SHORT).show()
-                    // ...
-                }
-                Snackbar.make(view, "Saved $fileName", Snackbar.LENGTH_SHORT).show()
-
+            val fileName = hearingTest?.saveResult(context, this)
+            if (fileName.isNullOrEmpty()) {
+                Snackbar.make(view, "Error: Unable to save file.", Snackbar.LENGTH_SHORT).show()
+                return@let
             }
+
+            // Upload the saved file to Firebase Storage if internet available
+            if (!isNetworkAvailable(context)) {
+                binding.progressBarSaving.visibility = View.GONE
+                binding.supportUs.isEnabled = true
+                Snackbar.make(view, "No internet connection. Results will be saved locally only.", Snackbar.LENGTH_LONG).show()
+                return@let
+            }
+
+            val storage = FirebaseStorage.getInstance()
+            val storageRef = storage.reference
+            val fileRef = storageRef.child(fileName)
+            val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "HearingTest/$fileName")
+            val stream = FileInputStream(file)
+
+           /* val uploadTask = fileRef.putStream(stream)
+            uploadTask.addOnFailureListener {
+                binding.progressBarSaving.visibility = View.GONE
+                binding.supportUs.isEnabled = true
+                Snackbar.make(view, "Upload failed: ${it.localizedMessage}", Snackbar.LENGTH_LONG).show()
+            }.addOnSuccessListener {
+                binding.progressBarSaving.visibility = View.GONE
+                binding.supportUs.isEnabled = true
+                Snackbar.make(view, "File uploaded successfully: $fileName", Snackbar.LENGTH_SHORT).show()
+                isResultSaved = true
+            } */
         }
     }
+
+
 
 //    private fun supportUs(view: View) {
 //        context?.let {
@@ -312,12 +371,6 @@ class HearingTestFragment : Fragment(), StateChangeListener {
 //        }
 //    }
 
-    private fun makeRequest() {
-        requestPermissions(
-            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            STORAGE_PERMISSION_REQUEST
-        )
-    }
 
     override fun onChanged(
         state: State,
@@ -344,8 +397,29 @@ class HearingTestFragment : Fragment(), StateChangeListener {
         binding.labelYaxis.visibility = View.VISIBLE
         binding.resultContainer.visibility = View.VISIBLE
         binding.support.visibility = View.VISIBLE
-        save(binding.save)
+        if (!isResultSaved) {
+            save(binding.save)
+        }
         stop()
+    }
+
+    override fun onSuccess(message: String) {
+        binding.progressBarSaving.visibility = View.GONE
+        isResultSaved = true
+        binding.supportUs.isEnabled = true
+        activity?.runOnUiThread {
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun onFailure(error: String) {
+        binding.progressBarSaving.visibility = View.GONE
+        binding.supportUs.isEnabled = true
+        isResultSaved = true
+        activity?.runOnUiThread {
+            Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+            Log.e("Firestore", error)
+        }
     }
 
     private fun initUserInfo() {
@@ -377,21 +451,6 @@ class HearingTestFragment : Fragment(), StateChangeListener {
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>, grantResults: IntArray
-    ) {
-        when (requestCode) {
-            STORAGE_PERMISSION_REQUEST -> {
-
-                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-
-                } else {
-                    save(binding.save)
-                }
-            }
-        }
-    }
 
 //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 //        if (requestCode == PAYPAL_REQUEST_CODE) {
@@ -449,6 +508,7 @@ class HearingTestFragment : Fragment(), StateChangeListener {
     }
 
     companion object {
+        private const val TAG = "HEARING_TEST_FRAGMENT"
         private const val STORAGE_PERMISSION_REQUEST = 112
         private const val PAYPAL_REQUEST_CODE = 114
     }

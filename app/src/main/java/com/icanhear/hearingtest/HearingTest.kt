@@ -1,14 +1,18 @@
 package com.hearingtest.hearingtest
 
 import android.content.Context
+import android.os.Build
 import android.os.Environment
 import android.text.TextUtils
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.hearingtest.hearingtest.models.State
 import com.hearingtest.hearingtest.models.UserInfo
+import com.icanhear.hearingtest.FirebaseCallback
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Date
+import java.util.Locale
 
 class HearingTest(
     private val stateChangeListener: StateChangeListener
@@ -55,6 +59,7 @@ class HearingTest(
                 SoundGenerator.Channel.LEFT -> {
                     leftEarResults.add(it)
                 }
+
                 SoundGenerator.Channel.RIGHT -> {
                     rightEarResults.add(it)
                 }
@@ -134,6 +139,7 @@ class HearingTest(
                 SoundGenerator.Channel.LEFT -> {
                     leftEarResults.add(it)
                 }
+
                 SoundGenerator.Channel.RIGHT -> {
                     rightEarResults.add(it)
                 }
@@ -157,65 +163,57 @@ class HearingTest(
             if (currentChannel == SoundGenerator.Channel.LEFT) {
                 progress += frequencies.size
             }
-            stateChangeListener.onChanged(it, frequencies.size * 2, progress, approxStop, confirmation)
+            stateChangeListener.onChanged(
+                it,
+                frequencies.size * 2,
+                progress,
+                approxStop,
+                confirmation
+            )
         }
     }
 
-    fun saveResult(context: Context): String {
-
-
-
-// Create a reference to 'images/mountains.jpg'
-
+   fun saveResult(context: Context, firebaseCallback: FirebaseCallback? = null): String {
         val userInfo = UserInfo.instance
-
         val date = SimpleDateFormat("hh:mm:ss dd.MM.yyyy", Locale.getDefault()).format(Date())
 
-        val pathToExternalStorage = Environment.getExternalStorageDirectory()
-        val appDirectory = File(pathToExternalStorage.absolutePath + "/documents/HearingTest")
-        appDirectory.mkdirs()
+        // Always use app-specific directory under Documents — no permissions needed
+        val appDirectory = File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "HearingTest")
+        if (!appDirectory.exists()) appDirectory.mkdirs()
 
         val fileName = "HearingTest $date.txt"
+        val file = File(appDirectory, fileName)
 
-
-
-        File(appDirectory, fileName).bufferedWriter().use { out ->
-            if (!TextUtils.isEmpty(userInfo.name)) {
+        // Write data to file
+        file.bufferedWriter().use { out ->
+            if (!userInfo.name.isNullOrEmpty()) {
                 out.write("${context.getString(R.string.name)}: ${userInfo.name}")
                 out.newLine()
             }
-
-            if (!TextUtils.isEmpty(userInfo.location)) {
+            if (!userInfo.location.isNullOrEmpty()) {
                 out.write("${context.getString(R.string.location)}: ${userInfo.location}")
                 out.newLine()
             }
-
-            if (!TextUtils.isEmpty(userInfo.age)) {
+            if (!userInfo.age.isNullOrEmpty()) {
                 out.write("${context.getString(R.string.age)}: ${userInfo.age}")
                 out.newLine()
             }
-
-            if (!TextUtils.isEmpty(userInfo.email)) {
+            if (!userInfo.email.isNullOrEmpty()) {
                 out.write("${context.getString(R.string.email)}: ${userInfo.email}")
                 out.newLine()
             }
-
-            if (!TextUtils.isEmpty(userInfo.phone)) {
+            if (!userInfo.phone.isNullOrEmpty()) {
                 out.write("${context.getString(R.string.phone)}: ${userInfo.phone}")
                 out.newLine()
             }
-
-            if (!TextUtils.isEmpty(userInfo.medicalHistory)) {
+            if (!userInfo.medicalHistory.isNullOrEmpty()) {
                 out.write("${context.getString(R.string.medical_history)}: ${userInfo.medicalHistory}")
                 out.newLine()
             }
-
-            if (!TextUtils.isEmpty(userInfo.gainFactor)){
-
+            if (!userInfo.gainFactor.isNullOrEmpty()) {
                 out.write("${context.getString(R.string.gain_factor)}: ${userInfo.gainFactor}")
                 out.newLine()
             }
-
 
             out.newLine()
 
@@ -235,6 +233,41 @@ class HearingTest(
                 out.newLine()
             }
         }
+
+        // Upload to Firebase Firestore
+        val db = FirebaseFirestore.getInstance()
+        val testResult = hashMapOf(
+            "timestamp" to date,
+            "gainFactor" to userInfo.gainFactor,
+            "rightEar" to rightEarResults.map { mapOf("frequency" to it.frequency, "dB" to it.dB) },
+            "leftEar" to leftEarResults.map { mapOf("frequency" to it.frequency, "dB" to it.dB) }
+        )
+
+        val userDocRef = db.collection("hearing_tests").document(userInfo.phone)
+        val profileUpdates = mutableMapOf<String, Any>()
+        if (!userInfo.name.isNullOrBlank()) profileUpdates["name"] = userInfo.name
+        if (!userInfo.location.isNullOrBlank()) profileUpdates["location"] = userInfo.location
+        if (!userInfo.age.isNullOrBlank()) profileUpdates["age"] = userInfo.age
+        if (!userInfo.email.isNullOrBlank()) profileUpdates["email"] = userInfo.email
+        if (!userInfo.phone.isNullOrBlank()) profileUpdates["phone"] = userInfo.phone
+        if (!userInfo.medicalHistory.isNullOrBlank()) profileUpdates["medicalHistory"] = userInfo.medicalHistory
+
+        userDocRef.set(profileUpdates, SetOptions.merge())
+            .addOnSuccessListener {
+                userDocRef.collection("tests")
+                    .add(testResult)
+                    .addOnSuccessListener {
+                        firebaseCallback?.onSuccess("Hearing test result has been successfully saved")
+                    }
+                    .addOnFailureListener { e ->
+                        firebaseCallback?.onFailure("Result failed due to server issue. Please try again.: ${e.localizedMessage}")
+                    }
+            }
+            .addOnFailureListener { e ->
+                firebaseCallback?.onFailure("Connection failed: ${e.localizedMessage}")
+            }
+
         return fileName
     }
+
 }
