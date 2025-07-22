@@ -154,6 +154,7 @@
         android:xlargeScreens="true" />
 
     <application
+
         android:name="com.hearingtest.hearingtest.ICanHearApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

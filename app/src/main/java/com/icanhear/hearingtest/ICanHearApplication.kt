@@ -1,6 +1,7 @@
 package com.hearingtest.hearingtest
 
 import android.app.Application
+import com.google.firebase.FirebaseApp
 
 
 //import com.hearingtest.hearingtest.paypalconfig.Config.Companion.config
@@ -18,6 +19,7 @@ open class ICanHearApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        FirebaseApp.initializeApp(this)
 
 
 
